@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { haptic } from '../../lib/haptics';
 import { sounds } from '../../lib/sound';
+import InstagramIcon from '../ui/InstagramIcon';
 import {
   ArrowLeft,
   Send,
@@ -12,15 +13,92 @@ import {
   Flame,
   Sprout,
   CheckCheck,
+  Phone,
 } from 'lucide-react';
 
 const ICEBREAKERS = [
   'Chalo Garbe Ghumiye! 🎊',
+  '📸 Insta handle share karein?',
+  '📱 WhatsApp number exchange karein?',
   'Konsa pass hai aapke paas? 🎟️',
-  '2-taali ya 3-taali step? 💃',
   'Matching outfit color decide karein? 🥻',
-  'Timing kya rahegi ground ki? ⏰',
+  '2-taali ya 3-taali step? 💃',
+  'Entry gate pe kab milenge? ⏰',
 ];
+
+const renderFormattedContent = (text, isMe) => {
+  if (!text) return null;
+
+  // Matches URLs, @handles, and 10 or 12 digit phone numbers
+  const regex = /(https?:\/\/[^\s]+|@[a-zA-Z0-9_.]+|\+?91[\s-]?[6-9]\d{9}|[6-9]\d{9})/g;
+  const parts = text.split(regex);
+
+  return parts.map((part, index) => {
+    if (!part) return null;
+
+    if (part.startsWith('http://') || part.startsWith('https://')) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => haptic.light()}
+          className="underline text-blue-300 hover:text-blue-100 break-all inline"
+        >
+          {part}
+        </a>
+      );
+    }
+
+    if (part.startsWith('@') && part.length > 1) {
+      const handle = part.slice(1);
+      return (
+        <a
+          key={index}
+          href={`https://instagram.com/${handle}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => haptic.light()}
+          className={`inline-flex items-center gap-1 font-bold underline px-1.5 py-0.5 rounded text-[11px] sm:text-xs my-0.5 transition-colors ${
+            isMe
+              ? 'bg-black/30 text-yellow-200 decoration-yellow-300/60 hover:text-white'
+              : 'bg-gold/15 text-gold decoration-gold/60 hover:text-marigold'
+          }`}
+        >
+          <InstagramIcon className="w-3 h-3 inline-block" />
+          <span>{part}</span>
+        </a>
+      );
+    }
+
+    const cleanDigits = part.replace(/\D/g, '');
+    const isTenDigit = cleanDigits.length === 10 && /^[6-9]/.test(cleanDigits);
+    const isTwelveDigit = cleanDigits.length === 12 && cleanDigits.startsWith('91');
+    if (isTenDigit || isTwelveDigit) {
+      const waNumber = isTenDigit ? `91${cleanDigits}` : cleanDigits;
+      return (
+        <a
+          key={index}
+          href={`https://wa.me/${waNumber}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => haptic.light()}
+          className={`inline-flex items-center gap-1 font-bold underline px-1.5 py-0.5 rounded text-[11px] sm:text-xs my-0.5 transition-colors ${
+            isMe
+              ? 'bg-black/30 text-green-200 decoration-green-300/60 hover:text-white'
+              : 'bg-green-500/15 text-green-400 decoration-green-400/60 hover:text-green-300'
+          }`}
+        >
+          <Phone className="w-3 h-3 inline-block" />
+          <span>{part}</span>
+        </a>
+      );
+    }
+
+    return <span key={index}>{part}</span>;
+  });
+};
 
 export default function ChatScreen() {
   const {
@@ -141,19 +219,53 @@ export default function ChatScreen() {
           </div>
         </div>
 
-        {/* Festive Dandiya Sparkle button */}
-        <button
-          type="button"
-          onClick={() => {
-            haptic.celebrate();
-            sounds.playConnectSpark();
-          }}
-          title="Festive Dandiya Spark"
-          aria-label="Festive Spark"
-          className="w-9 h-9 rounded-full bg-[#1A0A0A] border border-gold/30 hover:border-gold flex items-center justify-center text-gold transition-colors cursor-pointer touch-manipulation active:scale-90"
-        >
-          <Sparkles className="w-4 h-4 text-gold animate-pulse" />
-        </button>
+        {/* Header Actions: Direct WhatsApp/Insta shortcuts + Festive Sparkle */}
+        <div className="flex items-center gap-1.5">
+          {partner.whatsapp && (
+            <a
+              href={`https://wa.me/${
+                partner.whatsapp.replace(/\D/g, '').length === 10
+                  ? '91' + partner.whatsapp.replace(/\D/g, '')
+                  : partner.whatsapp.replace(/\D/g, '')
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open WhatsApp"
+              aria-label="Open WhatsApp"
+              onClick={() => haptic.light()}
+              className="w-8 h-8 rounded-full bg-[#1A0A0A] border border-[#25D366]/40 hover:border-[#25D366] flex items-center justify-center text-[#25D366] transition-colors cursor-pointer touch-manipulation active:scale-90"
+            >
+              <Phone className="w-3.5 h-3.5 fill-[#25D366]" />
+            </a>
+          )}
+
+          {partner.instagram && (
+            <a
+              href={`https://instagram.com/${partner.instagram.replace('@', '').trim()}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open Instagram"
+              aria-label="Open Instagram"
+              onClick={() => haptic.light()}
+              className="w-8 h-8 rounded-full bg-[#1A0A0A] border border-[#FD1D1D]/40 hover:border-[#FD1D1D] flex items-center justify-center text-[#FD1D1D] transition-colors cursor-pointer touch-manipulation active:scale-90"
+            >
+              <InstagramIcon className="w-3.5 h-3.5" />
+            </a>
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              haptic.celebrate();
+              sounds.playConnectSpark();
+            }}
+            title="Festive Dandiya Spark"
+            aria-label="Festive Spark"
+            className="w-8 h-8 rounded-full bg-[#1A0A0A] border border-gold/30 hover:border-gold flex items-center justify-center text-gold transition-colors cursor-pointer touch-manipulation active:scale-90"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
+          </button>
+        </div>
       </header>
 
       {/* Messages Thread Area */}
@@ -177,13 +289,13 @@ export default function ChatScreen() {
               className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
             >
               <div
-                className={`max-w-[82%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md ${
+                className={`max-w-[84%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md ${
                   isMe
                     ? 'bg-gradient-to-r from-[#FF4D00] to-[#FF7A00] text-white rounded-br-none shadow-glow-primary'
                     : 'bg-[#1A0A0A] border border-[#3D151C] text-[#FFF5E4] rounded-bl-none'
                 }`}
               >
-                <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                <div className="whitespace-pre-wrap break-words">{renderFormattedContent(msg.text, isMe)}</div>
                 <div
                   className={`flex items-center gap-1 text-[9px] mt-1 ${
                     isMe ? 'justify-end text-white/80' : 'justify-start text-text-muted'
