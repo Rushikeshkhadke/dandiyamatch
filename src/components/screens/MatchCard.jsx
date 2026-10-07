@@ -190,8 +190,13 @@ export default function MatchCard() {
   const [reportSuccess, setReportSuccess] = useState(false);
   const [chatsModalOpen, setChatsModalOpen] = useState(false);
 
-  // Auto-correct if current match has different city OR same gender as user (e.g. from previous session)
+  // Auto-correct or gracefully redirect if no match
   useEffect(() => {
+    if (!currentMatch) {
+      setScreen('noMatch');
+      return;
+    }
+
     if (currentMatch && user) {
       const userGender = user.gender || 'Male';
       const targetGender = userGender === 'Male' ? 'Female' : 'Male';
@@ -204,10 +209,8 @@ export default function MatchCard() {
       if (isGenderMismatch || isCityMismatch) {
         findNextMatch(false);
       }
-    } else if (!currentMatch && user) {
-      findNextMatch(false);
     }
-  }, [currentMatch, user, findNextMatch]);
+  }, [currentMatch, user, findNextMatch, setScreen]);
 
   if (!user || !currentMatch) {
     return (

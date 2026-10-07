@@ -18,12 +18,12 @@ import {
 
 const ICEBREAKERS = [
   'Chalo Garbe Ghumiye! 🎊',
-  '📸 Insta handle share karein?',
-  '📱 WhatsApp number exchange karein?',
   'Konsa pass hai aapke paas? 🎟️',
   'Matching outfit color decide karein? 🥻',
   '2-taali ya 3-taali step? 💃',
   'Entry gate pe kab milenge? ⏰',
+  'Dandiya sticks ready hain? 🪄',
+  'Garba ke baad jalebi-fafda chalenge? 😋',
 ];
 
 const renderFormattedContent = (text, isMe) => {
@@ -219,39 +219,8 @@ export default function ChatScreen() {
           </div>
         </div>
 
-        {/* Header Actions: Direct WhatsApp/Insta shortcuts + Festive Sparkle */}
+        {/* Header Action: Festive Sparkle */}
         <div className="flex items-center gap-1.5">
-          {partner.whatsapp && (
-            <a
-              href={`https://wa.me/${
-                partner.whatsapp.replace(/\D/g, '').length === 10
-                  ? '91' + partner.whatsapp.replace(/\D/g, '')
-                  : partner.whatsapp.replace(/\D/g, '')
-              }`}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Open WhatsApp"
-              aria-label="Open WhatsApp"
-              onClick={() => haptic.light()}
-              className="w-8 h-8 rounded-full bg-[#1A0A0A] border border-[#25D366]/40 hover:border-[#25D366] flex items-center justify-center text-[#25D366] transition-colors cursor-pointer touch-manipulation active:scale-90"
-            >
-              <Phone className="w-3.5 h-3.5 fill-[#25D366]" />
-            </a>
-          )}
-
-          {partner.instagram && (
-            <a
-              href={`https://instagram.com/${partner.instagram.replace('@', '').trim()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Open Instagram"
-              aria-label="Open Instagram"
-              onClick={() => haptic.light()}
-              className="w-8 h-8 rounded-full bg-[#1A0A0A] border border-[#FD1D1D]/40 hover:border-[#FD1D1D] flex items-center justify-center text-[#FD1D1D] transition-colors cursor-pointer touch-manipulation active:scale-90"
-            >
-              <InstagramIcon className="w-3.5 h-3.5" />
-            </a>
-          )}
 
           <button
             type="button"

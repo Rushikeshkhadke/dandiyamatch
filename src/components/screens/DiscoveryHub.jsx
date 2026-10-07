@@ -34,9 +34,12 @@ export default function DiscoveryHub() {
 
   const t = getTranslation(language);
 
-  // Pre-calculate the match in the background while user is on Discovery Hub
+  const hasCheckedMatchRef = React.useRef(false);
+
+  // Pre-calculate the match in the background ONCE when user enters Discovery Hub
   React.useEffect(() => {
-    if (user && !currentMatch) {
+    if (user && !currentMatch && !hasCheckedMatchRef.current) {
+      hasCheckedMatchRef.current = true;
       findNextMatch(false);
     }
   }, [user, currentMatch, findNextMatch]);
@@ -51,12 +54,20 @@ export default function DiscoveryHub() {
 
   const handleStartSwiping = (e) => {
     if (e) e.stopPropagation();
-    if (!currentMatch) {
-      findNextMatch(false);
-    }
-    setScreen('matchCard');
     haptic.tap();
     sounds.playDandiyaTap();
+
+    let match = currentMatch;
+    if (!match) {
+      findNextMatch(false);
+      match = useStore.getState().currentMatch;
+    }
+
+    if (match) {
+      setScreen('matchCard');
+    } else {
+      setScreen('noMatch');
+    }
   };
 
   if (!user) {

@@ -13,14 +13,12 @@ import {
   Calendar,
   Heart,
   Music,
-  Phone,
   LogOut,
   Check,
   Zap,
   Camera,
   Users,
 } from 'lucide-react';
-import InstagramIcon from '../ui/InstagramIcon';
 import { POPULAR_CITIES } from '../../lib/mockData';
 
 const AVATAR_PRESETS = [
@@ -53,8 +51,6 @@ export default function ProfilePage() {
     dancing_level: user?.dancing_level || 'Intermediate',
     vibe: user?.vibe || 'Energetic',
     event_pin: user?.event_pin || '',
-    whatsapp: user?.whatsapp || '',
-    instagram: user?.instagram || '',
     photo_url: user?.photo_url || '',
   });
 
@@ -146,8 +142,6 @@ export default function ProfilePage() {
                   dancing_level: user?.dancing_level || 'Intermediate',
                   vibe: user?.vibe || 'Energetic',
                   event_pin: user?.event_pin || '',
-                  whatsapp: user?.whatsapp || '',
-                  instagram: user?.instagram || '',
                   photo_url: user?.photo_url || '',
                 });
                 setIsEditing(true);
@@ -377,42 +371,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Contact info card */}
-        <div className="bg-[#1A0A0A] p-4 rounded-2xl border border-[#3D151C]">
-          <div className="flex items-center gap-2 text-xs font-semibold text-text-muted mb-2">
-            <Phone className="w-4 h-4 text-green-400" />
-            <span>Contact Information</span>
-          </div>
-          {isEditing ? (
-            <div className="space-y-2">
-              <input
-                type="tel"
-                value={editData.whatsapp}
-                onChange={(e) => setEditData({ ...editData, whatsapp: e.target.value })}
-                placeholder="WhatsApp Number"
-                className="w-full bg-[#250E13] text-xs text-[#FFF5E4] rounded-lg p-2 outline-none border border-[#3D151C]"
-              />
-              <input
-                type="text"
-                value={editData.instagram}
-                onChange={(e) => setEditData({ ...editData, instagram: e.target.value })}
-                placeholder="Instagram Handle (@...)"
-                className="w-full bg-[#250E13] text-xs text-[#FFF5E4] rounded-lg p-2 outline-none border border-[#3D151C]"
-              />
-            </div>
-          ) : (
-            <div className="flex flex-col gap-1 text-xs text-[#FFF5E4]">
-              <div className="flex items-center gap-2">
-                <span className="text-green-400">WhatsApp:</span>
-                <span className="font-mono">{user?.whatsapp ? `+91 ${user.whatsapp}` : 'Not added'}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-pink-400">Instagram:</span>
-                <span>{user?.instagram ? `@${user.instagram}` : 'Not added'}</span>
-              </div>
-            </div>
-          )}
-        </div>
+
 
         {/* EVENT PIN CARD */}
         <div className="bg-[#1A0A0A] p-4 rounded-2xl border border-[#3D151C]">

@@ -53,12 +53,7 @@ export default function App() {
     loadUsers();
   }, [user?.id, user?.is_demo]);
 
-  // If user lands directly with matching data, kickstart match pool
-  useEffect(() => {
-    if (currentScreen === 'matchCard' && user && !useStore.getState().currentMatch) {
-      findNextMatch(false);
-    }
-  }, [currentScreen, user, findNextMatch]);
+
 
   const renderScreen = () => {
     switch (currentScreen) {

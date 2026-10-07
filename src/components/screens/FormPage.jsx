@@ -15,10 +15,8 @@ import {
   MapPin,
   Calendar,
   Check,
-  Phone,
   CheckCircle2,
 } from 'lucide-react';
-import InstagramIcon from '../ui/InstagramIcon';
 
 const AVATAR_PRESETS = [
   'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80',
@@ -34,7 +32,7 @@ export default function FormPage() {
   const t = getTranslation(language);
 
   const [step, setStep] = useState(1);
-  const totalSteps = 9;
+  const totalSteps = 8;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
@@ -46,8 +44,6 @@ export default function FormPage() {
     age_group: user?.age_group || '18-25',
     dancing_level: user?.dancing_level || 'Intermediate',
     vibe: user?.vibe || 'Energetic',
-    whatsapp: user?.whatsapp || '',
-    instagram: user?.instagram || '',
     photo_url: user?.photo_url || '',
     event_pin: user?.event_pin || '',
     eventSearch: '',
@@ -92,8 +88,6 @@ export default function FormPage() {
       age_group: formData.age_group || '18-25',
       dancing_level: formData.dancing_level || 'Intermediate',
       vibe: formData.vibe || 'Energetic',
-      whatsapp: formData.whatsapp.trim(),
-      instagram: formData.instagram.trim(),
       photo_url:
         formData.photo_url ||
         (formData.gender === 'Female' ? AVATAR_PRESETS[0] : AVATAR_PRESETS[1]),
@@ -455,62 +449,10 @@ export default function FormPage() {
             </motion.div>
           )}
 
-          {/* STEP 7: Contact */}
+          {/* STEP 7: Photo */}
           {step === 7 && (
             <motion.div
               key="step-7"
-              variants={slideVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="w-full flex flex-col"
-            >
-              <div className="text-center mb-6">
-                <span className="text-3xl">📱</span>
-                <h2 className="text-3xl font-heading font-bold text-[#FFF5E4] mt-2 leading-tight text-center">
-                  {t.q6}
-                </h2>
-                <p className="text-sm text-text-muted mt-1.5 text-center">{t.q6Sub}</p>
-              </div>
-
-              <div className="space-y-4">
-                {/* WhatsApp */}
-                <div className="bg-[#1A0A0A] p-4 rounded-2xl border border-[#3D151C] focus-within:border-green-500 transition-all">
-                  <div className="flex items-center gap-2.5 mb-2 text-green-400 font-semibold text-sm">
-                    <Phone className="w-4 h-4" />
-                    <span>{t.whatsappLabel}</span>
-                  </div>
-                  <input
-                    type="tel"
-                    value={formData.whatsapp}
-                    onChange={(e) => updateField('whatsapp', e.target.value)}
-                    placeholder={t.whatsappPlaceholder}
-                    className="w-full bg-transparent text-base text-[#FFF5E4] outline-none placeholder:text-text-muted/40 font-mono"
-                  />
-                </div>
-
-                {/* Instagram */}
-                <div className="bg-[#1A0A0A] p-4 rounded-2xl border border-[#3D151C] focus-within:border-pink-500 transition-all">
-                  <div className="flex items-center gap-2.5 mb-2 text-pink-400 font-semibold text-sm">
-                    <InstagramIcon className="w-4 h-4" />
-                    <span>{t.instagramLabel}</span>
-                  </div>
-                  <input
-                    type="text"
-                    value={formData.instagram}
-                    onChange={(e) => updateField('instagram', e.target.value)}
-                    placeholder={t.instagramPlaceholder}
-                    className="w-full bg-transparent text-base text-[#FFF5E4] outline-none placeholder:text-text-muted/40"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* STEP 8: Photo */}
-          {step === 8 && (
-            <motion.div
-              key="step-8"
               variants={slideVariants}
               initial="initial"
               animate="animate"
@@ -581,8 +523,8 @@ export default function FormPage() {
             </motion.div>
           )}
 
-          {/* STEP 9: Event Pin */}
-          {step === 9 && (
+          {/* STEP 8: Event Pin */}
+          {step === 8 && (
             <motion.div
               key="step-9"
               variants={slideVariants}

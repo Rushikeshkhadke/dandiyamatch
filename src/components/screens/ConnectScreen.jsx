@@ -7,8 +7,7 @@ import { useStore } from '../../store/useStore';
 import { getTranslation } from '../../i18n';
 import { haptic } from '../../lib/haptics';
 import { sounds } from '../../lib/sound';
-import { Phone, Share2, ArrowRight, ArrowLeft, X, MessageCircle } from 'lucide-react';
-import InstagramIcon from '../ui/InstagramIcon';
+import { Share2, ArrowRight, ArrowLeft, X, MessageCircle } from 'lucide-react';
 
 export default function ConnectScreen() {
   const {
@@ -58,26 +57,7 @@ export default function ConnectScreen() {
     );
   }
 
-  const cleanWhatsApp = (num) => {
-    if (!num) return '';
-    const digits = num.replace(/\D/g, '');
-    return digits.length === 10 ? `91${digits}` : digits;
-  };
 
-  const cleanInstagram = (handle) => {
-    if (!handle) return '';
-    return handle.replace('@', '').trim();
-  };
-
-  const whatsappLink = lastConnectedPartner.whatsapp
-    ? `https://wa.me/${cleanWhatsApp(lastConnectedPartner.whatsapp)}?text=${encodeURIComponent(
-        `Hi ${lastConnectedPartner.naam}! We matched on DandiyaMatch 🎊 Chalo Garbe Ghumiye!`
-      )}`
-    : null;
-
-  const instagramLink = lastConnectedPartner.instagram
-    ? `https://instagram.com/${cleanInstagram(lastConnectedPartner.instagram)}`
-    : null;
 
   return (
     <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-5 pt-3 pb-6 overflow-y-auto overflow-x-hidden select-none">
@@ -226,37 +206,6 @@ export default function ConnectScreen() {
           <MessageCircle className="w-5 h-5 fill-white/20" />
           <span>Chat with {lastConnectedPartner.naam.split(' ')[0]} Now 💬</span>
         </button>
-
-        {/* Optional Secondary Socials (Compact Row) */}
-        {(whatsappLink || instagramLink) && (
-          <div className="flex items-center gap-2 pt-0.5">
-            {whatsappLink && (
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => haptic.light()}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#1A0A0A] hover:bg-[#20ba5a]/20 border border-[#25D366]/40 text-[#25D366] font-semibold py-2.5 px-3 rounded-xl transition-all active:scale-95 cursor-pointer text-xs touch-manipulation"
-              >
-                <Phone className="w-3.5 h-3.5 fill-[#25D366]" />
-                <span>WhatsApp</span>
-              </a>
-            )}
-
-            {instagramLink && (
-              <a
-                href={instagramLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => haptic.light()}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#1A0A0A] hover:bg-[#FD1D1D]/20 border border-[#FD1D1D]/40 text-[#FD1D1D] font-semibold py-2.5 px-3 rounded-xl transition-all active:scale-95 cursor-pointer text-xs touch-manipulation"
-              >
-                <InstagramIcon className="w-3.5 h-3.5" />
-                <span>Instagram</span>
-              </a>
-            )}
-          </div>
-        )}
 
         {/* Find Another Partner Button */}
         <Button

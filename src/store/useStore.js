@@ -156,13 +156,23 @@ export const useStore = create((set, get) => ({
       }));
       haptic.medium();
     } else {
-      set((state) => ({
-        currentMatch: null,
-        currentScreen:
-          state.currentScreen === 'discovery' || state.currentScreen === 'profile'
-            ? state.currentScreen
-            : 'noMatch',
-      }));
+      set((state) => {
+        if (
+          state.currentMatch === null &&
+          (state.currentScreen === 'noMatch' ||
+            state.currentScreen === 'discovery' ||
+            state.currentScreen === 'profile')
+        ) {
+          return state;
+        }
+        return {
+          currentMatch: null,
+          currentScreen:
+            state.currentScreen === 'discovery' || state.currentScreen === 'profile'
+              ? state.currentScreen
+              : 'noMatch',
+        };
+      });
       haptic.soft();
     }
 
