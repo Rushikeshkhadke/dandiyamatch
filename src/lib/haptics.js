@@ -1,56 +1,32 @@
-// Haptic feedback utility with safe fallback for unsupported browsers/devices
+// Non-blocking Haptic feedback utility with safe fallback
+const safeVibrate = (pattern) => {
+  if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+    try {
+      setTimeout(() => {
+        try {
+          navigator.vibrate(pattern);
+        } catch (_) {}
+      }, 0);
+    } catch (_) {}
+  }
+};
+
 export const haptic = {
   // Light tick for buttons, pill selects, tabs
-  light: () => {
-    try {
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate(15);
-      }
-    } catch (_) {}
-  },
+  light: () => safeVibrate(15),
 
   // Medium feedback for card release, next step
-  medium: () => {
-    try {
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate(35);
-      }
-    } catch (_) {}
-  },
+  medium: () => safeVibrate(35),
 
   // Double tap for Dandiya stick strikes
-  tap: () => {
-    try {
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate([30, 25, 30]);
-      }
-    } catch (_) {}
-  },
+  tap: () => safeVibrate([30, 25, 30]),
 
   // Massive celebration vibration when match connects
-  celebrate: () => {
-    try {
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate([100, 50, 100]);
-      }
-    } catch (_) {}
-  },
+  celebrate: () => safeVibrate([100, 50, 100]),
 
   // Soft buzz for passing or canceling
-  soft: () => {
-    try {
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate(20);
-      }
-    } catch (_) {}
-  },
+  soft: () => safeVibrate(20),
 
   // Warning or error
-  warning: () => {
-    try {
-      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate([40, 60, 40, 60, 80]);
-      }
-    } catch (_) {}
-  },
+  warning: () => safeVibrate([40, 60, 40, 60, 80]),
 };

@@ -26,22 +26,12 @@ export default function PillSelector({
         const isSelected = value === option.value;
 
         return (
-          <motion.button
+          <button
             key={option.value}
             type="button"
             onClick={() => handleSelect(option.value)}
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.02 }}
-            animate={
-              isSelected
-                ? {
-                    scale: [1, 1.03, 1],
-                    transition: { type: 'spring', stiffness: 450, damping: 18 },
-                  }
-                : {}
-            }
             className={`
-              relative flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-200 cursor-pointer
+              relative flex items-center justify-between p-4 rounded-2xl text-left transition-all duration-100 cursor-pointer touch-manipulation active:scale-[0.98]
               ${
                 isSelected
                   ? 'bg-gradient-to-r from-[#FF4D00]/20 to-[#FFD700]/10 border-2 border-primary shadow-glow-primary text-[#FFF5E4]'
@@ -92,7 +82,7 @@ export default function PillSelector({
                 </motion.svg>
               )}
             </div>
-          </motion.button>
+          </button>
         );
       })}
     </div>

@@ -197,12 +197,9 @@ export const useStore = create((set, get) => ({
     }
   },
 
-  connectCurrentMatch: async () => {
+  connectCurrentMatch: () => {
     const { currentMatch, connectedIds, user } = get();
     if (!currentMatch) return;
-
-    haptic.celebrate();
-    sounds.playConnectSpark();
 
     const updatedConnected = [...connectedIds, currentMatch.id];
     set({
@@ -211,18 +208,23 @@ export const useStore = create((set, get) => ({
       currentScreen: 'connect',
     });
 
+    haptic.celebrate();
+    sounds.playConnectSpark();
+
     try {
       localStorage.setItem(STORAGE_KEY_CONNECTED, JSON.stringify(updatedConnected));
     } catch (_) {}
 
-    // Record in Supabase if active
+    // Record in Supabase if active (fire-and-forget in background)
     if (isSupabaseConfigured() && supabase && user) {
-      try {
-        await supabase.from('connects').insert({
+      supabase
+        .from('connects')
+        .insert({
           user_id: user.id,
           connected_user_id: currentMatch.id,
-        });
-      } catch (_) {}
+        })
+        .then(() => {})
+        .catch(() => {});
     }
   },
 

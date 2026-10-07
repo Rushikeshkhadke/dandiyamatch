@@ -87,9 +87,14 @@ export default function ConnectScreen() {
       <header className="relative z-30 flex items-center justify-between pt-1">
         <button
           type="button"
-          onClick={() => findNextMatch(false)}
+          onClick={(e) => {
+            e.stopPropagation();
+            findNextMatch(false);
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
           aria-label="Back to Matching"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1A0A0A]/90 border border-[#3D151C] hover:border-gold/50 text-gold hover:text-white transition-all cursor-pointer active:scale-95 shadow-md text-xs font-semibold"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1A0A0A]/90 border border-[#3D151C] hover:border-gold/50 text-gold hover:text-white transition-all cursor-pointer active:scale-95 shadow-md text-xs font-semibold touch-manipulation"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back</span>
@@ -107,9 +112,14 @@ export default function ConnectScreen() {
 
         <button
           type="button"
-          onClick={() => findNextMatch(false)}
+          onClick={(e) => {
+            e.stopPropagation();
+            findNextMatch(false);
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
           aria-label="Close"
-          className="w-9 h-9 rounded-full bg-[#1A0A0A]/90 border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-all cursor-pointer active:scale-95 shadow-md"
+          className="w-9 h-9 rounded-full bg-[#1A0A0A]/90 border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-all cursor-pointer active:scale-95 shadow-md touch-manipulation"
         >
           <X className="w-4 h-4" />
         </button>

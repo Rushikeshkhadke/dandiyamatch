@@ -152,12 +152,11 @@ export default function LoginPage() {
       {/* Bottom Login Buttons */}
       <div className="relative z-10 flex flex-col gap-3 pb-4">
         {/* Custom styled Continue with Google button */}
-        <motion.button
+        <button
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
-          whileTap={{ scale: 0.96 }}
-          className="w-full flex items-center justify-center gap-3.5 bg-[#1A0A0A] hover:bg-[#250E13] text-[#FFF5E4] font-medium py-4 px-6 rounded-2xl border border-[#3D151C] hover:border-gold/40 shadow-card-deep transition-all duration-200 cursor-pointer"
+          className="w-full flex items-center justify-center gap-3.5 bg-[#1A0A0A] hover:bg-[#250E13] text-[#FFF5E4] font-medium py-4 px-6 rounded-2xl border border-[#3D151C] hover:border-gold/40 shadow-card-deep active:scale-[0.98] transition-transform duration-75 cursor-pointer touch-manipulation"
         >
           {/* Custom Google 'G' icon */}
           <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
@@ -179,7 +178,7 @@ export default function LoginPage() {
             />
           </svg>
           <span className="text-base font-semibold">{t.continueWithGoogle}</span>
-        </motion.button>
+        </button>
 
         {/* Quick Festive Demo Login */}
         <Button

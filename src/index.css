@@ -16,6 +16,11 @@ body {
   overscroll-behavior-y: none;
 }
 
+button, [role="button"], a, input, select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;

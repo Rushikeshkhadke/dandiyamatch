@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { haptic } from '../../lib/haptics';
 
 export default function Button({
@@ -15,12 +14,12 @@ export default function Button({
 }) {
   const handleClick = (e) => {
     if (disabled) return;
-    haptic.light();
     if (onClick) onClick(e);
+    haptic.light();
   };
 
   const baseStyles =
-    'relative inline-flex items-center justify-center font-medium select-none transition-all duration-200 outline-none rounded-2xl';
+    'relative inline-flex items-center justify-center font-medium select-none outline-none rounded-2xl touch-manipulation transition-all duration-100';
 
   const sizeStyles = {
     sm: 'px-4 py-2 text-sm gap-1.5 min-h-[42px]',
@@ -42,23 +41,25 @@ export default function Button({
   };
 
   return (
-    <motion.button
+    <button
       type={type}
       onClick={handleClick}
       disabled={disabled}
-      whileTap={{ scale: disabled ? 1 : 0.96 }}
-      whileHover={{ y: disabled ? 0 : -1 }}
       className={`
         ${baseStyles}
         ${sizeStyles[size]}
         ${variantStyles[variant]}
         ${fullWidth ? 'w-full' : ''}
-        ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
+        ${
+          disabled
+            ? 'opacity-40 cursor-not-allowed'
+            : 'cursor-pointer active:scale-[0.97] active:opacity-90'
+        }
         ${className}
       `}
     >
       {icon && <span className="flex-shrink-0 text-xl">{icon}</span>}
       <span>{children}</span>
-    </motion.button>
+    </button>
   );
 }

@@ -46,13 +46,14 @@ export default function DiscoveryHub() {
     }
   }, [currentMatch?.photo_url]);
 
-  const handleStartSwiping = () => {
-    haptic.celebrate();
-    sounds.playDandiyaTap();
+  const handleStartSwiping = (e) => {
+    if (e) e.stopPropagation();
     if (!currentMatch) {
       findNextMatch(false);
     }
     setScreen('matchCard');
+    haptic.tap();
+    sounds.playDandiyaTap();
   };
 
   const cityName = user?.city || 'Ahmedabad';
@@ -213,7 +214,9 @@ export default function DiscoveryHub() {
         <button
           type="button"
           onClick={handleStartSwiping}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FF4D00] via-[#FF6A00] to-[#E0A96D] text-white font-heading font-extrabold text-base tracking-wide flex items-center justify-center gap-3 shadow-glow-primary hover:opacity-95 active:scale-[0.98] transition-all cursor-pointer"
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FF4D00] via-[#FF6A00] to-[#E0A96D] text-white font-heading font-extrabold text-base tracking-wide flex items-center justify-center gap-3 shadow-glow-primary active:scale-[0.98] transition-transform duration-75 cursor-pointer touch-manipulation"
         >
           <span>Start Swiping</span>
           <ArrowRight className="w-5 h-5 text-white" />
@@ -223,8 +226,13 @@ export default function DiscoveryHub() {
         <div className="flex items-center justify-between gap-3 pt-1">
           <button
             type="button"
-            onClick={() => setScreen('profile')}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setScreen('profile');
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            className="flex-1 py-2.5 px-3 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold active:scale-95 transition-transform duration-75 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
           >
             <User className="w-3.5 h-3.5 text-gold" />
             <span>My Profile</span>
@@ -232,8 +240,13 @@ export default function DiscoveryHub() {
 
           <button
             type="button"
-            onClick={() => setScreen('shareCard')}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setScreen('shareCard');
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            className="flex-1 py-2.5 px-3 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold active:scale-95 transition-transform duration-75 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
           >
             <Share2 className="w-3.5 h-3.5 text-primary" />
             <span>Share Card</span>

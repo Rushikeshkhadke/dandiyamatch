@@ -225,13 +225,18 @@ export default function MatchCard() {
   return (
     <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between overflow-hidden select-none">
       {/* Top Floating App Bar */}
-      <header className="absolute top-0 left-0 right-0 z-30 px-5 pt-4 pb-3 flex items-center justify-between bg-gradient-to-b from-[#0D0208]/90 via-[#0D0208]/50 to-transparent pointer-events-auto">
+      <header className="absolute top-0 left-0 right-0 z-50 px-5 pt-4 pb-3 flex items-center justify-between bg-gradient-to-b from-[#0D0208]/90 via-[#0D0208]/50 to-transparent pointer-events-auto">
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setScreen('discovery')}
+            onClick={(e) => {
+              e.stopPropagation();
+              setScreen('discovery');
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
             aria-label="Back to Hub"
-            className="w-8 h-8 rounded-full bg-[#1A0A0A]/80 border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-[#1A0A0A]/80 border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white active:scale-90 transition-transform duration-75 cursor-pointer touch-manipulation"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -249,8 +254,13 @@ export default function MatchCard() {
           {user?.is_demo ? (
             <button
               type="button"
-              onClick={logout}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/30 to-marigold/30 border border-primary/60 text-[#FFF5E4] hover:text-gold text-xs font-bold transition-all cursor-pointer shadow-glow-primary hover:scale-105 active:scale-95"
+              onClick={(e) => {
+                e.stopPropagation();
+                logout();
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/30 to-marigold/30 border border-primary/60 text-[#FFF5E4] hover:text-gold text-xs font-bold transition-all cursor-pointer shadow-glow-primary active:scale-95 touch-manipulation"
             >
               <LogOut className="w-3.5 h-3.5 text-primary" />
               <span>Sign In</span>
@@ -258,10 +268,15 @@ export default function MatchCard() {
           ) : (
             <button
               type="button"
-              onClick={logout}
+              onClick={(e) => {
+                e.stopPropagation();
+                logout();
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
               title="Logout"
               aria-label="Logout"
-              className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-text-muted hover:text-white active:scale-90 transition-transform duration-75 cursor-pointer touch-manipulation"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -270,9 +285,14 @@ export default function MatchCard() {
           {/* Report Button */}
           <button
             type="button"
-            onClick={() => setReportModalOpen(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setReportModalOpen(true);
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
             aria-label="Report Profile"
-            className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-text-muted hover:text-red-400 transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-text-muted hover:text-red-400 active:scale-90 transition-transform duration-75 cursor-pointer touch-manipulation"
           >
             <Flag className="w-4 h-4" />
           </button>
@@ -280,9 +300,14 @@ export default function MatchCard() {
           {/* Profile Button */}
           <button
             type="button"
-            onClick={() => setScreen('profile')}
+            onClick={(e) => {
+              e.stopPropagation();
+              setScreen('profile');
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
             aria-label="View My Profile"
-            className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-gold/40 flex items-center justify-center text-gold hover:border-gold transition-colors overflow-hidden cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-gold/40 flex items-center justify-center text-gold hover:border-gold active:scale-90 transition-transform duration-75 overflow-hidden cursor-pointer touch-manipulation"
           >
             {user?.photo_url ? (
               <img src={user.photo_url} alt="My Avatar" className="w-full h-full object-cover" />
@@ -308,18 +333,21 @@ export default function MatchCard() {
       </div>
 
       {/* Floating Bottom Action Buttons: Pass (left) & Connect (right) */}
-      <footer className="absolute bottom-5 left-0 right-0 z-30 px-6 flex items-center justify-between max-w-md mx-auto pointer-events-auto">
+      <footer className="absolute bottom-5 left-0 right-0 z-50 px-6 flex items-center justify-between max-w-md mx-auto pointer-events-auto">
         {/* Pass Button */}
-        <motion.button
+        <button
           type="button"
-          onClick={passCurrentMatch}
-          whileTap={{ scale: 0.9 }}
-          whileHover={{ scale: 1.05 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            passCurrentMatch();
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
           aria-label="Pass"
-          className="w-16 h-16 rounded-full bg-[#1A0A0A] border-2 border-[#3D151C] hover:border-[#8B6F5E] text-text-muted hover:text-white flex items-center justify-center shadow-card-deep transition-all cursor-pointer"
+          className="w-16 h-16 rounded-full bg-[#1A0A0A] border-2 border-[#3D151C] hover:border-[#8B6F5E] text-text-muted hover:text-white flex items-center justify-center shadow-card-deep active:scale-90 transition-transform duration-75 cursor-pointer touch-manipulation"
         >
           <X className="w-7 h-7" />
-        </motion.button>
+        </button>
 
         {/* Swipe Hint */}
         <div className="text-center pointer-events-none">
@@ -329,20 +357,23 @@ export default function MatchCard() {
         </div>
 
         {/* Connect Button */}
-        <motion.button
+        <button
           type="button"
-          onClick={connectCurrentMatch}
-          whileTap={{ scale: 0.92 }}
-          whileHover={{ scale: 1.05 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            connectCurrentMatch();
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
           aria-label="Connect"
-          className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#FF4D00] to-[#FF7A00] border-2 border-[#FFE566]/70 text-white flex items-center justify-center shadow-glow-primary hover:shadow-[0_0_35px_rgba(255,77,0,0.8)] transition-all cursor-pointer relative"
+          className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#FF4D00] to-[#FF7A00] border-2 border-[#FFE566]/70 text-white flex items-center justify-center shadow-glow-primary hover:shadow-[0_0_35px_rgba(255,77,0,0.8)] active:scale-90 transition-transform duration-75 cursor-pointer relative touch-manipulation"
         >
           {/* Dandiya + Heart Icon combo */}
           <div className="relative flex items-center justify-center">
             <Heart className="w-9 h-9 fill-white text-white drop-shadow" />
             <span className="absolute text-sm">🪔</span>
           </div>
-        </motion.button>
+        </button>
       </footer>
 
       {/* Report Modal */}
