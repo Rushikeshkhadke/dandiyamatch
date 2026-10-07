@@ -15,9 +15,12 @@ import {
   Calendar,
   Volume2,
   VolumeX,
+  MessageCircle,
 } from 'lucide-react';
+import ChatsListModal from '../ui/ChatsListModal';
 
 export default function DiscoveryHub() {
+  const [isChatsModalOpen, setIsChatsModalOpen] = React.useState(false);
   const {
     user,
     setScreen,
@@ -91,6 +94,22 @@ export default function DiscoveryHub() {
             className="w-9 h-9 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-gold transition-colors cursor-pointer touch-manipulation active:scale-90"
           >
             {isSoundMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-gold" />}
+          </button>
+
+          {/* My Chats / Jodis Button */}
+          <button
+            type="button"
+            onClick={() => setIsChatsModalOpen(true)}
+            aria-label="My Chats"
+            title="My Garba Jodis"
+            className="relative w-9 h-9 rounded-full bg-[#1A0A0A] border border-primary/40 hover:border-primary flex items-center justify-center text-primary hover:text-white transition-colors cursor-pointer touch-manipulation active:scale-90"
+          >
+            <MessageCircle className="w-4 h-4" />
+            {connectedIds && connectedIds.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center shadow-glow-primary">
+                {connectedIds.length}
+              </span>
+            )}
           </button>
 
           {/* Profile Avatar Button */}
@@ -227,7 +246,7 @@ export default function DiscoveryHub() {
         </button>
 
         {/* Secondary Options */}
-        <div className="flex items-center justify-between gap-3 pt-1">
+        <div className="flex items-center justify-between gap-2 pt-1">
           <button
             type="button"
             onClick={(e) => {
@@ -236,10 +255,24 @@ export default function DiscoveryHub() {
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold active:scale-95 transition-transform duration-75 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
+            className="flex-1 py-2.5 px-2.5 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold active:scale-95 transition-transform duration-75 flex items-center justify-center gap-1.5 cursor-pointer touch-manipulation"
           >
             <User className="w-3.5 h-3.5 text-gold" />
-            <span>My Profile</span>
+            <span>Profile</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsChatsModalOpen(true);
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            className="flex-1 py-2.5 px-2.5 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-primary/40 hover:border-primary text-xs font-semibold text-[#FFF5E4] hover:text-primary active:scale-95 transition-transform duration-75 flex items-center justify-center gap-1.5 cursor-pointer touch-manipulation"
+          >
+            <MessageCircle className="w-3.5 h-3.5 text-primary" />
+            <span>My Jodis {connectedIds && connectedIds.length > 0 ? `(${connectedIds.length})` : ''}</span>
           </button>
 
           <button
@@ -250,13 +283,19 @@ export default function DiscoveryHub() {
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold active:scale-95 transition-transform duration-75 flex items-center justify-center gap-2 cursor-pointer touch-manipulation"
+            className="flex-1 py-2.5 px-2.5 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-[#3D151C] text-xs font-semibold text-[#FFF5E4] hover:text-gold active:scale-95 transition-transform duration-75 flex items-center justify-center gap-1.5 cursor-pointer touch-manipulation"
           >
-            <Share2 className="w-3.5 h-3.5 text-primary" />
-            <span>Share Card</span>
+            <Share2 className="w-3.5 h-3.5 text-gold/80" />
+            <span>Share</span>
           </button>
         </div>
       </motion.div>
+
+      {/* Connected Jodis Modal */}
+      <ChatsListModal
+        isOpen={isChatsModalOpen}
+        onClose={() => setIsChatsModalOpen(false)}
+      />
     </div>
   );
 }

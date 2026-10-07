@@ -4,11 +4,13 @@ import { findBestMatch, findBestMatchSync } from '../lib/matching';
 import { haptic } from '../lib/haptics';
 import { sounds } from '../lib/sound';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { generatePartnerGarbaReply } from '../lib/chatBot';
 
 const STORAGE_KEY_USER = 'dandiya_match_user';
 const STORAGE_KEY_LANG = 'dandiya_match_lang';
 const STORAGE_KEY_PASSED = 'dandiya_match_passed';
 const STORAGE_KEY_CONNECTED = 'dandiya_match_connected';
+const STORAGE_KEY_CHATS = 'dandiya_match_chats';
 
 const getInitialUser = () => {
   try {
@@ -38,8 +40,17 @@ const getInitialLang = () => {
   }
 };
 
+const getInitialChats = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_CHATS);
+    return raw ? JSON.parse(raw) : {};
+  } catch (_) {
+    return {};
+  }
+};
+
 export const useStore = create((set, get) => ({
-  currentScreen: 'loading', // loading, landing, login, form, matching, matchCard, connect, profile, noMatch, shareCard
+  currentScreen: 'loading', // loading, landing, login, form, matching, matchCard, connect, chat, profile, noMatch, shareCard
   language: getInitialLang(),
   user: getInitialUser(),
   allUsers: DUMMY_USERS,
@@ -50,6 +61,9 @@ export const useStore = create((set, get) => ({
   isEventMatch: false,
   lastConnectedPartner: null,
   isSoundMuted: false,
+  chats: getInitialChats(),
+  activeChatPartner: null,
+  isPartnerTyping: false,
 
   setScreen: (screen) => {
     set({ currentScreen: screen });
@@ -198,13 +212,34 @@ export const useStore = create((set, get) => ({
   },
 
   connectCurrentMatch: () => {
-    const { currentMatch, connectedIds, user } = get();
+    const { currentMatch, connectedIds, user, chats } = get();
     if (!currentMatch) return;
 
     const updatedConnected = [...connectedIds, currentMatch.id];
+    
+    // Auto-create welcoming icebreaker for this connected partner
+    const existingThread = chats[currentMatch.id] || [];
+    let updatedChats = chats;
+    if (existingThread.length === 0) {
+      const welcomeMsg = {
+        id: 'welcome-' + currentMatch.id,
+        sender: 'partner',
+        text: `Kem Cho! 🎊 DandiyaMatch par connect karke bahut achha laga! Chalo Garba plan karte hain! 🪔✨`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      updatedChats = {
+        ...chats,
+        [currentMatch.id]: [welcomeMsg],
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY_CHATS, JSON.stringify(updatedChats));
+      } catch (_) {}
+    }
+
     set({
       connectedIds: updatedConnected,
       lastConnectedPartner: currentMatch,
+      chats: updatedChats,
       currentScreen: 'connect',
     });
 
@@ -280,6 +315,114 @@ export const useStore = create((set, get) => ({
     }
   },
 
+  openChat: (partner) => {
+    const targetPartner = partner || get().lastConnectedPartner;
+    if (!targetPartner) return;
+
+    const { chats } = get();
+    const existingThread = chats[targetPartner.id] || [];
+    let updatedChats = chats;
+
+    if (existingThread.length === 0) {
+      const welcomeMsg = {
+        id: 'welcome-' + targetPartner.id,
+        sender: 'partner',
+        text: `Kem Cho! 🎊 DandiyaMatch par connect karke bahut achha laga! Chalo Garba plan karte hain! 🪔✨`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      updatedChats = {
+        ...chats,
+        [targetPartner.id]: [welcomeMsg],
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY_CHATS, JSON.stringify(updatedChats));
+      } catch (_) {}
+    }
+
+    set({
+      activeChatPartner: targetPartner,
+      chats: updatedChats,
+      currentScreen: 'chat',
+    });
+    haptic.light();
+  },
+
+  sendMessage: (partnerId, text) => {
+    if (!text || !text.trim() || !partnerId) return;
+    const cleanText = text.trim();
+    const { chats, user, activeChatPartner, allUsers } = get();
+
+    const newMsg = {
+      id: 'msg-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+      sender: 'user',
+      text: cleanText,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    const currentThread = chats[partnerId] || [];
+    const updatedThread = [...currentThread, newMsg];
+    const updatedChats = {
+      ...chats,
+      [partnerId]: updatedThread,
+    };
+
+    set({ chats: updatedChats });
+    haptic.tap();
+    sounds.playDandiyaTap();
+
+    try {
+      localStorage.setItem(STORAGE_KEY_CHATS, JSON.stringify(updatedChats));
+    } catch (_) {}
+
+    // Record in Supabase if messages table is available (fire-and-forget)
+    if (isSupabaseConfigured() && supabase && user) {
+      try {
+        supabase
+          .from('messages')
+          .insert({
+            sender_id: user.id,
+            receiver_id: partnerId,
+            message: cleanText,
+          })
+          .then(() => {})
+          .catch(() => {});
+      } catch (_) {}
+    }
+
+    // Interactive Festive Auto-Reply if chatting with a partner
+    const partner = activeChatPartner || allUsers.find((u) => u.id === partnerId);
+    set({ isPartnerTyping: true });
+
+    setTimeout(() => {
+      const replyText = generatePartnerGarbaReply(partner, cleanText);
+      const replyMsg = {
+        id: 'reply-' + Date.now(),
+        sender: 'partner',
+        text: replyText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+
+      const freshChats = get().chats;
+      const threadWithReply = [...(freshChats[partnerId] || []), replyMsg];
+      const chatsWithReply = {
+        ...freshChats,
+        [partnerId]: threadWithReply,
+      };
+
+      set({
+        chats: chatsWithReply,
+        isPartnerTyping: false,
+      });
+
+      haptic.celebrate();
+      sounds.playConnectSpark();
+
+      try {
+        localStorage.setItem(STORAGE_KEY_CHATS, JSON.stringify(chatsWithReply));
+      } catch (_) {}
+    }, 1300);
+  },
+
   logout: async () => {
     haptic.light();
     try {
@@ -296,6 +439,8 @@ export const useStore = create((set, get) => ({
       connectedIds: [],
       currentMatch: null,
       lastConnectedPartner: null,
+      activeChatPartner: null,
+      isPartnerTyping: false,
     });
 
     // 2. Safely notify Supabase in background without blocking state or UI

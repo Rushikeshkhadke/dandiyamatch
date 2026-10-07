@@ -16,6 +16,7 @@ import ProfilePage from './components/screens/ProfilePage';
 import NoMatchScreen from './components/screens/NoMatchScreen';
 import ShareCard from './components/screens/ShareCard';
 import DiscoveryHub from './components/screens/DiscoveryHub';
+import ChatScreen from './components/screens/ChatScreen';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 
 export default function App() {
@@ -60,6 +61,8 @@ export default function App() {
         return <MatchCard key="matchCard" />;
       case 'connect':
         return <ConnectScreen key="connect" />;
+      case 'chat':
+        return <ChatScreen key="chat" />;
       case 'profile':
         return <ProfilePage key="profile" />;
       case 'noMatch':

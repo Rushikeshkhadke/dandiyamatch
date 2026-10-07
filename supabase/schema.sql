@@ -91,3 +91,23 @@ CREATE POLICY "Users can create connects"
 -- Reports: Anyone can submit a report
 CREATE POLICY "Users can insert reports" 
   ON public.reports FOR INSERT WITH CHECK (true);
+
+-- 5. Messages Table (Real-time In-App Garba Chat)
+CREATE TABLE IF NOT EXISTS public.messages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  sender_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+  receiver_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_conversation 
+  ON public.messages(sender_id, receiver_id);
+
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view conversation messages"
+  ON public.messages FOR SELECT USING (true);
+
+CREATE POLICY "Users can send messages"
+  ON public.messages FOR INSERT WITH CHECK (true);

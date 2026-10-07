@@ -15,8 +15,10 @@ import {
   CheckCircle,
   LogOut,
   ArrowLeft,
+  MessageCircle,
 } from 'lucide-react';
 import { normalizeCity } from '../../lib/matching';
+import ChatsListModal from '../ui/ChatsListModal';
 
 /**
  * Individual Swipeable Card
@@ -180,11 +182,13 @@ export default function MatchCard() {
     language,
     user,
     logout,
+    connectedIds,
   } = useStore();
 
   const t = getTranslation(language);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [reportSuccess, setReportSuccess] = useState(false);
+  const [chatsModalOpen, setChatsModalOpen] = useState(false);
 
   // Auto-correct if current match has different city OR same gender as user (e.g. from previous session)
   useEffect(() => {
@@ -279,6 +283,27 @@ export default function MatchCard() {
               className="w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-white/10 flex items-center justify-center text-text-muted hover:text-white active:scale-90 transition-transform duration-75 cursor-pointer touch-manipulation"
             >
               <LogOut className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* Chats / Messages Button */}
+          {connectedIds && connectedIds.length > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setChatsModalOpen(true);
+              }}
+              onPointerDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              title="My Garba Jodis"
+              aria-label="My Chats"
+              className="relative w-9 h-9 rounded-full bg-[#0D0208]/70 backdrop-blur-md border border-primary/40 hover:border-primary flex items-center justify-center text-primary active:scale-90 transition-transform duration-75 cursor-pointer touch-manipulation"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-primary text-white text-[8px] font-bold flex items-center justify-center shadow-glow-primary">
+                {connectedIds.length}
+              </span>
             </button>
           )}
 
@@ -434,6 +459,12 @@ export default function MatchCard() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Connected Jodis Modal */}
+      <ChatsListModal
+        isOpen={chatsModalOpen}
+        onClose={() => setChatsModalOpen(false)}
+      />
     </div>
   );
 }

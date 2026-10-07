@@ -7,7 +7,7 @@ import { useStore } from '../../store/useStore';
 import { getTranslation } from '../../i18n';
 import { haptic } from '../../lib/haptics';
 import { sounds } from '../../lib/sound';
-import { Phone, Share2, ArrowRight, ArrowLeft, X } from 'lucide-react';
+import { Phone, Share2, ArrowRight, ArrowLeft, X, MessageCircle } from 'lucide-react';
 import InstagramIcon from '../ui/InstagramIcon';
 
 export default function ConnectScreen() {
@@ -15,6 +15,7 @@ export default function ConnectScreen() {
     lastConnectedPartner,
     setScreen,
     findNextMatch,
+    openChat,
     language,
     user,
   } = useStore();
@@ -216,46 +217,55 @@ export default function ConnectScreen() {
         transition={{ type: 'spring', stiffness: 300, damping: 26, delay: 0.5 }}
         className="relative z-20 space-y-2.5 pt-2"
       >
-        <p className="text-center text-[11px] font-semibold text-gold tracking-wide">
-          {t.reachOut}
-        </p>
+        {/* BIG PRIMARY IN-APP CHAT BUTTON */}
+        <button
+          type="button"
+          onClick={() => openChat(lastConnectedPartner)}
+          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FF4D00] via-[#FF6A00] to-[#E0A96D] text-white font-heading font-extrabold text-base tracking-wide flex items-center justify-center gap-3 shadow-glow-primary hover:opacity-95 active:scale-[0.98] transition-transform duration-75 cursor-pointer touch-manipulation"
+        >
+          <MessageCircle className="w-5 h-5 fill-white/20" />
+          <span>Chat with {lastConnectedPartner.naam.split(' ')[0]} Now 💬</span>
+        </button>
 
-        {/* WhatsApp Button */}
-        {whatsappLink ? (
-          <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => haptic.light()}
-            className="w-full flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3 px-5 rounded-2xl shadow-lg transition-all active:scale-95 cursor-pointer text-sm"
-          >
-            <Phone className="w-4 h-4 fill-white" />
-            <span>{t.whatsappChat}</span>
-          </a>
-        ) : null}
+        {/* Optional Secondary Socials (Compact Row) */}
+        {(whatsappLink || instagramLink) && (
+          <div className="flex items-center gap-2 pt-0.5">
+            {whatsappLink && (
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => haptic.light()}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#1A0A0A] hover:bg-[#20ba5a]/20 border border-[#25D366]/40 text-[#25D366] font-semibold py-2.5 px-3 rounded-xl transition-all active:scale-95 cursor-pointer text-xs touch-manipulation"
+              >
+                <Phone className="w-3.5 h-3.5 fill-[#25D366]" />
+                <span>WhatsApp</span>
+              </a>
+            )}
 
-        {/* Instagram Button */}
-        {instagramLink ? (
-          <a
-            href={instagramLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => haptic.light()}
-            className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCB045] hover:opacity-95 text-white font-bold py-3 px-5 rounded-2xl shadow-lg transition-all active:scale-95 cursor-pointer text-sm"
-          >
-            <InstagramIcon className="w-4 h-4" />
-            <span>{t.instagramChat}</span>
-          </a>
-        ) : null}
+            {instagramLink && (
+              <a
+                href={instagramLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => haptic.light()}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#1A0A0A] hover:bg-[#FD1D1D]/20 border border-[#FD1D1D]/40 text-[#FD1D1D] font-semibold py-2.5 px-3 rounded-xl transition-all active:scale-95 cursor-pointer text-xs touch-manipulation"
+              >
+                <InstagramIcon className="w-3.5 h-3.5" />
+                <span>Instagram</span>
+              </a>
+            )}
+          </div>
+        )}
 
-        {/* Primary Find Next Partner Button */}
+        {/* Find Another Partner Button */}
         <Button
-          variant="primary"
+          variant="secondary"
           size="md"
           fullWidth
-          icon={<ArrowRight className="w-4 h-4" />}
+          icon={<ArrowRight className="w-4 h-4 text-gold" />}
           onClick={() => findNextMatch(false)}
-          className="glow-orange font-bold text-sm bg-gradient-to-r from-primary to-marigold active:scale-95 cursor-pointer mt-1"
+          className="border-gold/30 text-gold hover:text-white font-bold text-sm active:scale-95 cursor-pointer mt-1"
         >
           {t.findAnother} →
         </Button>
