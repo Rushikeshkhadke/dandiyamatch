@@ -38,9 +38,11 @@ export const findBestMatchSync = ({
   currentUser,
   passedIds = [],
   connectedIds = [],
-  localPool = DUMMY_USERS,
+  localPool = [],
 }) => {
   if (!currentUser) return null;
+
+  const isDemo = Boolean(currentUser.is_demo);
 
   const excludedIds = new Set([
     currentUser.id,
@@ -53,13 +55,22 @@ export const findBestMatchSync = ({
     currentUser.gender && currentUser.gender.toLowerCase() === 'female';
   const targetGender = isUserFemale ? 'Male' : 'Female';
 
-  // Merge localPool and DUMMY_USERS, deduplicated by id
+  // Strict Pool Construction:
+  // - Demo user: uses localPool + DUMMY_USERS
+  // - Google user: strictly uses real users from localPool (where google_id is present). NO DUMMY_USERS!
   const poolMap = new Map();
-  [...(localPool || []), ...DUMMY_USERS].forEach((u) => {
-    if (u && u.id) {
+  const poolToUse = isDemo
+    ? [...(localPool || []), ...DUMMY_USERS]
+    : (localPool || []);
+
+  poolToUse.forEach((u) => {
+    if (u && u.id && u.id !== currentUser.id) {
+      // For real Google users, NEVER include dummy mock users
+      if (!isDemo && !u.google_id) return;
       poolMap.set(u.id, u);
     }
   });
+
   const allCandidates = Array.from(poolMap.values());
 
   // 1. Filter candidates matching city and target gender
@@ -69,7 +80,9 @@ export const findBestMatchSync = ({
     return normalizeCity(u.city) === userCity;
   });
 
-  // 2. Fallback to any city if local city pool is exhausted, so deck never breaks
+  // 2. Fallback to any city if local city pool is exhausted
+  // In demo mode: keeps swiping infinite
+  // In real mode: allows finding real dancers from other cities if available
   if (eligible.length === 0) {
     eligible = allCandidates.filter((u) => {
       if (!u || excludedIds.has(u.id) || u.has_partner) return false;
@@ -77,6 +90,7 @@ export const findBestMatchSync = ({
     });
   }
 
+  // If no real registered partner available, return null so NoMatchScreen is shown
   if (eligible.length === 0) {
     return null;
   }
@@ -113,65 +127,64 @@ export const findBestMatchSync = ({
     }
   }
 
-  // Default: First eligible match in city
+  // Default: First eligible match
   return { match: eligible[0], isEventMatch: false };
 };
 
 /**
  * Async Intelligent Matching Algorithm:
  * - Executes in 0ms for demo exploration.
- * - Single ultra-fast query for Google authenticated users.
+ * - Single ultra-fast query for Google authenticated users strictly fetching REAL registered users.
  */
 export const findBestMatch = async ({
   currentUser,
   passedIds = [],
   connectedIds = [],
-  localPool = DUMMY_USERS,
+  localPool = [],
 }) => {
   if (!currentUser) return null;
 
   const isGoogleUser = Boolean(currentUser.google_id && !currentUser.is_demo);
 
-  // For Demo users: Synchronous 0ms response immediately!
+  // For Demo users: Synchronous response immediately with mock pool
   if (!isGoogleUser) {
     return findBestMatchSync({
       currentUser,
       passedIds,
       connectedIds,
-      localPool,
+      localPool: localPool && localPool.length > 0 ? localPool : DUMMY_USERS,
     });
   }
 
-  // For Google users: Perform 1 single fast database query instead of 3 sequential roundtrips
+  // For Google users: Query Supabase ONLY for real users (google_id IS NOT NULL)
   if (isSupabaseConfigured() && supabase) {
     try {
       const isUserFemale =
         currentUser.gender && currentUser.gender.toLowerCase() === 'female';
       const targetGender = isUserFemale ? 'Male' : 'Female';
-      const userCity = normalizeCity(currentUser.city || 'Ahmedabad');
 
       const { data: dbUsers, error } = await supabase
         .from('users')
         .select('*')
+        .not('google_id', 'is', null)
+        .neq('id', currentUser.id)
         .eq('gender', targetGender)
         .eq('has_partner', false)
         .limit(30);
 
-      if (!error && dbUsers && dbUsers.length > 0) {
-        const result = findBestMatchSync({
+      if (!error && dbUsers) {
+        return findBestMatchSync({
           currentUser,
           passedIds,
           connectedIds,
-          localPool: [...dbUsers, ...(localPool || [])],
+          localPool: dbUsers,
         });
-        if (result) return result;
       }
     } catch (err) {
       console.warn('Real Google user matching lookup fallback:', err);
     }
   }
 
-  // Seamless fallback to ensure uninterrupted Navratri experience
   return findBestMatchSync({
     currentUser,
     passedIds,

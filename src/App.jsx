@@ -23,20 +23,35 @@ export default function App() {
   const { currentScreen, user, findNextMatch } = useStore();
   useAuth();
 
-  // Sync users from Supabase if online into local store
+  // Sync users based on session: Real users from Supabase for Google login, mockData for demo
   useEffect(() => {
     const loadUsers = async () => {
-      if (isSupabaseConfigured() && supabase) {
-        try {
-          const { data, error } = await supabase.from('users').select('*');
-          if (!error && data && data.length > 0) {
-            useStore.setState({ allUsers: data });
-          }
-        } catch (_) {}
+      const currentUser = useStore.getState().user;
+      if (!currentUser) return;
+
+      if (!currentUser.is_demo && currentUser.google_id) {
+        // Real Google Account: Query Supabase ONLY for other real registered dancers
+        if (isSupabaseConfigured() && supabase) {
+          try {
+            const { data, error } = await supabase
+              .from('users')
+              .select('*')
+              .not('google_id', 'is', null)
+              .neq('id', currentUser.id);
+
+            if (!error && data) {
+              useStore.setState({ allUsers: data });
+            }
+          } catch (_) {}
+        }
+      } else if (currentUser.is_demo) {
+        // Demo account: Keep festive mock dataset
+        const { DUMMY_USERS } = await import('./lib/mockData');
+        useStore.setState({ allUsers: DUMMY_USERS });
       }
     };
     loadUsers();
-  }, []);
+  }, [user?.id, user?.is_demo]);
 
   // If user lands directly with matching data, kickstart match pool
   useEffect(() => {

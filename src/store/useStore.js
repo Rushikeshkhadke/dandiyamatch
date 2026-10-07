@@ -53,7 +53,7 @@ export const useStore = create((set, get) => ({
   currentScreen: 'loading', // loading, landing, login, form, matching, matchCard, connect, chat, profile, noMatch, shareCard
   language: getInitialLang(),
   user: getInitialUser(),
-  allUsers: DUMMY_USERS,
+  allUsers: getInitialUser()?.is_demo === false ? [] : DUMMY_USERS,
   passedIds: JSON.parse(localStorage.getItem(STORAGE_KEY_PASSED) || '[]'),
   connectedIds: JSON.parse(localStorage.getItem(STORAGE_KEY_CONNECTED) || '[]'),
   reportedIds: [],
@@ -81,7 +81,26 @@ export const useStore = create((set, get) => ({
     try {
       localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(userData));
     } catch (_) {}
-    set({ user: userData });
+    const isDemo = userData ? Boolean(userData.is_demo) : true;
+    set({
+      user: userData,
+      allUsers: isDemo ? DUMMY_USERS : [],
+    });
+
+    // If real Google user, load real registered users from Supabase immediately
+    if (userData && !isDemo && userData.google_id && isSupabaseConfigured() && supabase) {
+      supabase
+        .from('users')
+        .select('*')
+        .not('google_id', 'is', null)
+        .neq('id', userData.id)
+        .then(({ data, error }) => {
+          if (!error && data) {
+            set({ allUsers: data });
+            get().findNextMatch(false);
+          }
+        });
+    }
   },
 
   updateUser: async (partial) => {
@@ -435,6 +454,7 @@ export const useStore = create((set, get) => ({
     set({
       currentScreen: 'login',
       user: null,
+      allUsers: [],
       passedIds: [],
       connectedIds: [],
       currentMatch: null,

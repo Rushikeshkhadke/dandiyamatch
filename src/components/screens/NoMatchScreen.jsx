@@ -102,8 +102,17 @@ export default function NoMatchScreen() {
         </h2>
 
         <p className="text-sm text-text-muted mt-3 max-w-xs leading-relaxed">
-          {t.noMatchSub}
+          {user?.is_demo
+            ? t.noMatchSub
+            : 'You are on a verified Google account! No other real dancers matching your criteria are in this circle yet. Share your card so friends can join, or test with demo dancers!'}
         </p>
+
+        {!user?.is_demo && (
+          <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 border border-primary/40 text-[11px] text-gold font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            <span>Real Account Active • Zero Dummy Profiles</span>
+          </div>
+        )}
       </div>
 
       {/* Bottom Buttons */}
@@ -121,7 +130,7 @@ export default function NoMatchScreen() {
         </Button>
 
         {/* Switch to real account button if in demo mode */}
-        {user?.is_demo && (
+        {user?.is_demo ? (
           <Button
             variant="primary"
             size="md"
@@ -132,6 +141,37 @@ export default function NoMatchScreen() {
           >
             Sign In with Google (Real Account)
           </Button>
+        ) : (
+          <button
+            type="button"
+            onClick={async () => {
+              const { DUMMY_USERS } = await import('../../lib/mockData');
+              const demoUser = {
+                id: 'demo-' + Date.now(),
+                naam: 'Aarav Patel',
+                gender: user?.gender === 'Female' ? 'Female' : 'Male',
+                city: user?.city || 'Ahmedabad',
+                age_group: '18-25',
+                dancing_level: 'Intermediate',
+                vibe: 'Energetic',
+                whatsapp: '9876543210',
+                instagram: 'aarav_garba',
+                photo_url:
+                  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
+                event_pin: 'Shankus Dandiya Fest',
+                has_partner: false,
+                is_demo: true,
+                language,
+                created_at: new Date().toISOString(),
+              };
+              useStore.setState({ allUsers: DUMMY_USERS });
+              useStore.getState().setUser(demoUser);
+              useStore.getState().setScreen('discovery');
+            }}
+            className="w-full py-3 px-4 rounded-xl bg-[#1A0A0A] hover:bg-[#250E13] border border-gold/40 text-xs font-semibold text-gold transition-all cursor-pointer touch-manipulation active:scale-95 text-center"
+          >
+            ⚡ Test Festive Swiping in Demo Mode
+          </button>
         )}
 
         {/* Reset / Review passed profiles */}

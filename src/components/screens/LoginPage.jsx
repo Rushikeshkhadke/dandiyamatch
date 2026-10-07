@@ -24,11 +24,16 @@ export default function LoginPage() {
         });
         if (error) throw error;
       } catch (err) {
-        console.warn('OAuth failed, falling back to festive session:', err);
-        createDemoSession();
+        console.error('Google Sign-In error:', err);
+        setLoading(false);
+        alert(
+          'Google Sign-In was not completed: ' +
+            (err.message || 'Please try again or use Quick Demo Mode below')
+        );
       }
     } else {
-      createDemoSession();
+      setLoading(false);
+      alert('Supabase is not configured yet. Please check your credentials or use Quick Demo Mode.');
     }
   };
 
