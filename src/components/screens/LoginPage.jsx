@@ -64,7 +64,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col justify-between px-6 py-8 overflow-hidden">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-6 overflow-y-auto select-none">
       {/* Very faint static rangoli pattern background */}
       <div className="absolute inset-0 opacity-[0.07] pointer-events-none flex items-center justify-center">
         <svg width="600" height="600" viewBox="0 0 400 400" fill="none">
@@ -150,7 +150,7 @@ export default function LoginPage() {
       </div>
 
       {/* Bottom Login Buttons */}
-      <div className="relative z-10 flex flex-col gap-3 pb-4">
+      <div className="relative z-10 flex flex-col gap-3 pb-2 shrink-0">
         {/* Custom styled Continue with Google button */}
         <button
           type="button"

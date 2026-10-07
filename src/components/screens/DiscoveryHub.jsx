@@ -60,12 +60,12 @@ export default function DiscoveryHub() {
   const partnerGender = user?.gender === 'Female' ? 'Male' : 'Female';
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col justify-between px-5 pt-4 pb-6 overflow-y-auto select-none">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-5 pt-3 pb-5 overflow-y-auto select-none">
       {/* Subtle festive background lighting */}
       <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent pointer-events-none" />
 
       {/* Top Header */}
-      <header className="relative z-20 flex items-center justify-between pb-3 border-b border-[#2A0D14]">
+      <header className="relative z-20 flex items-center justify-between pb-3 border-b border-[#2A0D14] shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-xl">🪔</span>
           <div>
@@ -208,7 +208,7 @@ export default function DiscoveryHub() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="relative z-20 space-y-3 pt-2"
+        className="relative z-20 space-y-3 pt-2 shrink-0"
       >
         {/* Primary Action Button */}
         <button

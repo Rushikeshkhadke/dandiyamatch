@@ -82,7 +82,7 @@ export default function App() {
       </div>
 
       {/* Mobile-first centered app shell */}
-      <div className="w-full max-w-[440px] h-[100dvh] sm:h-[844px] sm:max-h-[92vh] sm:rounded-[36px] sm:border-[4px] sm:border-[#3D151C] relative bg-[#0D0208] shadow-[0_0_80px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col my-auto">
+      <div className="w-full max-w-[440px] h-[100dvh] sm:h-[844px] sm:max-h-[95vh] sm:rounded-[36px] sm:border-[4px] sm:border-[#3D151C] relative bg-[#0D0208] shadow-[0_0_80px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col my-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentScreen}
@@ -90,7 +90,7 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.12, ease: 'easeOut' }}
-            className="w-full h-full flex flex-col"
+            className="w-full h-full flex flex-col overflow-hidden"
           >
             <ErrorBoundary onReset={() => findNextMatch(false)}>
               {renderScreen()}

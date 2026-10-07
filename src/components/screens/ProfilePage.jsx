@@ -81,9 +81,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col justify-between px-6 py-8 overflow-y-auto select-none">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-6 overflow-y-auto select-none">
       {/* Top Bar: Back Button, Title, Language, and Edit Profile Button */}
-      <header className="relative z-20 flex items-center justify-between mb-6">
+      <header className="relative z-20 flex items-center justify-between mb-6 shrink-0">
         <button
           type="button"
           onClick={() => setScreen('discovery')}

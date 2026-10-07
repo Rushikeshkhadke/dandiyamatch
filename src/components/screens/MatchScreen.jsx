@@ -19,7 +19,7 @@ export default function MatchScreen() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col items-center justify-center px-6 overflow-hidden">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col items-center justify-center px-6 overflow-hidden select-none">
       {/* Subtle Screen Flash when match found */}
       <AnimatePresence>
         {flash && (

@@ -156,19 +156,19 @@ export default function FormPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col justify-between overflow-x-hidden">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between overflow-hidden select-none">
       {/* Top Thin Gold Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 z-40 max-w-[480px] mx-auto">
+      <div className="absolute top-0 left-0 right-0 z-40">
         <ProgressBar currentStep={step} totalSteps={totalSteps} />
       </div>
 
       {/* Header with Back Button and Step Counter */}
-      <header className="relative z-30 pt-6 px-6 flex items-center justify-between">
+      <header className="relative z-30 pt-4 px-6 flex items-center justify-between shrink-0">
         <button
           type="button"
           onClick={prevStep}
           aria-label="Back"
-          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-white transition-colors"
+          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer active:scale-90"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -182,7 +182,7 @@ export default function FormPage() {
           <button
             type="button"
             onClick={handleSkip}
-            className="text-xs font-semibold text-text-muted hover:text-gold transition-colors px-2 py-1"
+            className="text-xs font-semibold text-text-muted hover:text-gold transition-colors px-2 py-1 cursor-pointer active:scale-95"
           >
             {t.skip}
           </button>
@@ -192,7 +192,7 @@ export default function FormPage() {
       </header>
 
       {/* Main Question Container — Slide Left / Right */}
-      <main className="flex-1 flex flex-col justify-center px-6 py-4 max-w-md mx-auto w-full">
+      <main className="flex-1 min-h-0 flex flex-col justify-center px-6 py-2 max-w-md mx-auto w-full overflow-y-auto">
         <AnimatePresence mode="wait">
           {/* STEP 1: Name */}
           {step === 1 && (
@@ -660,12 +660,12 @@ export default function FormPage() {
       </main>
 
       {/* Bottom Navigation: Next / Finish Button */}
-      <footer className="relative z-30 p-6 flex justify-end">
+      <footer className="relative z-30 px-6 py-4 flex justify-end shrink-0 border-t border-[#3D151C]/40 bg-[#0D0208]/90 backdrop-blur-sm">
         <Button
           variant="primary"
-          size="lg"
+          size="md"
           onClick={nextStep}
-          className="glow-orange font-bold text-base px-8 py-3.5"
+          className="glow-orange font-bold text-base px-8 py-3.5 active:scale-95 touch-manipulation"
           icon={
             step === totalSteps ? (
               <Check className="w-5 h-5 text-white" />

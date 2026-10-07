@@ -12,7 +12,7 @@ export default function LandingPage() {
   const [rangoliDrawn, setRangoliDrawn] = useState(false);
 
   return (
-    <div className="relative h-screen w-full bg-[#0D0208] flex flex-col justify-between overflow-hidden px-6 py-8">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between overflow-hidden px-6 py-6 select-none">
       {/* Floating tiny gold particles (CSS-powered 60fps) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(14)].map((_, i) => (
@@ -32,7 +32,7 @@ export default function LandingPage() {
       </div>
 
       {/* Top Bar: Brand mark + Language Pill + Sound Toggle */}
-      <header className="relative z-20 flex items-center justify-between">
+      <header className="relative z-20 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
           {/* Mini logo icon */}
           <div className="w-8 h-8 rounded-full bg-[#1A0A0A] border border-gold/40 flex items-center justify-center text-gold font-heading font-black text-sm">
@@ -117,7 +117,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.8 }}
-        className="relative z-20 pb-4"
+        className="relative z-20 pb-2 shrink-0"
       >
         <Button
           variant="primary"

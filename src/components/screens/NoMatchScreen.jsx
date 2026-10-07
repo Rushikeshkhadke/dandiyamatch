@@ -27,9 +27,9 @@ export default function NoMatchScreen() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col justify-between px-6 py-8 select-none">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-6 overflow-y-auto select-none">
       {/* Top back navigation */}
-      <header className="relative z-20 flex items-center justify-between">
+      <header className="relative z-20 flex items-center justify-between shrink-0">
         <button
           type="button"
           onClick={() => setScreen('profile')}

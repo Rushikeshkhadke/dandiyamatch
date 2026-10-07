@@ -49,9 +49,9 @@ export default function ShareCard() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#0D0208] flex flex-col justify-between px-6 py-6 overflow-y-auto select-none">
+    <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-5 overflow-y-auto select-none">
       {/* Top Bar */}
-      <header className="relative z-20 flex items-center justify-between mb-4">
+      <header className="relative z-20 flex items-center justify-between mb-4 shrink-0">
         <button
           type="button"
           onClick={() => setScreen('profile')}
