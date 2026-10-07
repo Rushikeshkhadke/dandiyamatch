@@ -56,6 +56,10 @@ export default function DiscoveryHub() {
     sounds.playDandiyaTap();
   };
 
+  if (!user) {
+    return <div className="relative h-full w-full bg-[#0D0208]" />;
+  }
+
   const cityName = user?.city || 'Ahmedabad';
   const partnerGender = user?.gender === 'Female' ? 'Male' : 'Female';
 
@@ -84,7 +88,7 @@ export default function DiscoveryHub() {
             type="button"
             onClick={toggleSound}
             aria-label="Toggle Sound"
-            className="w-9 h-9 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-gold transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-gold transition-colors cursor-pointer touch-manipulation active:scale-90"
           >
             {isSoundMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-gold" />}
           </button>
@@ -94,7 +98,7 @@ export default function DiscoveryHub() {
             type="button"
             onClick={() => setScreen('profile')}
             aria-label="My Profile"
-            className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-[#1A0A0A] border border-gold/40 hover:border-gold transition-all cursor-pointer group"
+            className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-[#1A0A0A] border border-gold/40 hover:border-gold transition-all cursor-pointer group touch-manipulation active:scale-95"
           >
             <div className="w-6 h-6 rounded-full overflow-hidden bg-primary/20 flex-shrink-0">
               {user?.photo_url ? (

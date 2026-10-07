@@ -48,6 +48,10 @@ export default function ShareCard() {
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
   };
 
+  if (!user) {
+    return <div className="relative h-full w-full bg-[#0D0208]" />;
+  }
+
   return (
     <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-5 overflow-y-auto select-none">
       {/* Top Bar */}
@@ -55,7 +59,8 @@ export default function ShareCard() {
         <button
           type="button"
           onClick={() => setScreen('profile')}
-          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-white"
+          aria-label="Back"
+          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer touch-manipulation active:scale-90"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>

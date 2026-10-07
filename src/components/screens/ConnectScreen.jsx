@@ -36,14 +36,20 @@ export default function ConnectScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!lastConnectedPartner) {
+  if (!user || !lastConnectedPartner) {
     return (
-      <div className="relative h-full w-full bg-[#0D0208] flex flex-col items-center justify-center p-6 text-center">
+      <div className="relative h-full w-full bg-[#0D0208] flex flex-col items-center justify-center p-6 text-center select-none">
         <h3 className="text-base font-bold text-gold mb-2">Connect partner ready</h3>
         <button
           type="button"
-          onClick={() => findNextMatch(false)}
-          className="px-5 py-2.5 rounded-full bg-primary text-white font-bold text-xs"
+          onClick={() => {
+            if (user) {
+              findNextMatch(false);
+            } else {
+              setScreen('login');
+            }
+          }}
+          className="px-5 py-2.5 rounded-full bg-primary text-white font-bold text-xs cursor-pointer touch-manipulation active:scale-95 shadow-glow-primary"
         >
           Explore Partners
         </button>
@@ -258,7 +264,7 @@ export default function ConnectScreen() {
         <button
           type="button"
           onClick={() => setScreen('shareCard')}
-          className="w-full text-center text-xs font-semibold text-gold/80 hover:text-gold pt-1 transition-colors cursor-pointer"
+          className="w-full text-center text-xs font-semibold text-gold/80 hover:text-gold pt-1 transition-colors cursor-pointer touch-manipulation active:scale-95"
         >
           {t.shareMyCard}
         </button>

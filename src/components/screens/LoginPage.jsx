@@ -84,7 +84,8 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setScreen('landing')}
-          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-white transition-colors"
+          aria-label="Back"
+          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer touch-manipulation active:scale-90"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>

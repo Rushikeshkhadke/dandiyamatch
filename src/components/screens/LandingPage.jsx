@@ -49,7 +49,7 @@ export default function LandingPage() {
             type="button"
             onClick={toggleSound}
             aria-label="Toggle Sound"
-            className="w-9 h-9 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-gold transition-colors"
+            className="w-9 h-9 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-gold transition-colors cursor-pointer touch-manipulation active:scale-90"
           >
             {isSoundMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-gold" />}
           </button>
@@ -61,7 +61,7 @@ export default function LandingPage() {
                 key={langKey}
                 type="button"
                 onClick={() => setLanguage(langKey)}
-                className={`px-2.5 py-1 rounded-full uppercase transition-all duration-200 ${
+                className={`px-2.5 py-1 rounded-full uppercase transition-all duration-200 cursor-pointer touch-manipulation active:scale-95 ${
                   language === langKey
                     ? 'bg-primary text-white font-bold shadow-[0_0_8px_#FF4D00]'
                     : 'text-text-muted hover:text-text-primary'

@@ -46,7 +46,10 @@ export function useAuth() {
             useStore.getState().setScreen('form');
           }
         } else if (event === 'SIGNED_OUT') {
-          logout();
+          // Break infinite loop: only call logout if there is still an active user in the store
+          if (useStore.getState().user) {
+            logout();
+          }
         }
       }
     );

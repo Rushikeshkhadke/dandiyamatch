@@ -39,10 +39,10 @@ export default function App() {
 
   // If user lands directly with matching data, kickstart match pool
   useEffect(() => {
-    if (currentScreen === 'matchCard' && !useStore.getState().currentMatch) {
+    if (currentScreen === 'matchCard' && user && !useStore.getState().currentMatch) {
       findNextMatch(false);
     }
-  }, [currentScreen, findNextMatch]);
+  }, [currentScreen, user, findNextMatch]);
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -92,7 +92,16 @@ export default function App() {
             transition={{ duration: 0.12, ease: 'easeOut' }}
             className="w-full h-full flex flex-col overflow-hidden"
           >
-            <ErrorBoundary onReset={() => findNextMatch(false)}>
+            <ErrorBoundary
+              onReset={() => {
+                const state = useStore.getState();
+                if (state.user) {
+                  state.findNextMatch(false);
+                } else {
+                  state.setScreen('landing');
+                }
+              }}
+            >
               {renderScreen()}
             </ErrorBoundary>
           </motion.div>

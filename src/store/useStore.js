@@ -288,19 +288,21 @@ export const useStore = create((set, get) => ({
       localStorage.removeItem(STORAGE_KEY_CONNECTED);
     } catch (_) {}
 
-    if (isSupabaseConfigured() && supabase) {
-      try {
-        await supabase.auth.signOut();
-      } catch (_) {}
-    }
-
+    // 1. Immediately switch screen to 'login' and clear all user/partner data
     set({
+      currentScreen: 'login',
       user: null,
       passedIds: [],
       connectedIds: [],
       currentMatch: null,
       lastConnectedPartner: null,
-      currentScreen: 'login',
     });
+
+    // 2. Safely notify Supabase in background without blocking state or UI
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        await supabase.auth.signOut();
+      } catch (_) {}
+    }
   },
 }));

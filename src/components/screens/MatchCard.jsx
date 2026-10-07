@@ -205,7 +205,7 @@ export default function MatchCard() {
     }
   }, [currentMatch, user, findNextMatch]);
 
-  if (!currentMatch) {
+  if (!user || !currentMatch) {
     return (
       <div className="relative h-full w-full bg-[#0D0208] flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -414,7 +414,7 @@ export default function MatchCard() {
                         key={reason}
                         type="button"
                         onClick={() => handleReport(reason)}
-                        className="w-full p-3 rounded-2xl bg-[#250E13] hover:bg-[#3D151C] text-xs font-semibold text-text-muted hover:text-white border border-[#3D151C] text-left transition-colors"
+                        className="w-full p-3 rounded-2xl bg-[#250E13] hover:bg-[#3D151C] text-xs font-semibold text-text-muted hover:text-white border border-[#3D151C] text-left transition-colors cursor-pointer touch-manipulation active:scale-[0.98]"
                       >
                         {reason}
                       </button>
@@ -424,7 +424,7 @@ export default function MatchCard() {
                   <button
                     type="button"
                     onClick={() => setReportModalOpen(false)}
-                    className="text-xs text-text-muted hover:text-white px-4 py-2 cursor-pointer"
+                    className="text-xs text-text-muted hover:text-white px-4 py-2 cursor-pointer touch-manipulation active:scale-95"
                   >
                     Cancel
                   </button>

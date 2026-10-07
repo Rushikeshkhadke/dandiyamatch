@@ -40,6 +40,8 @@ export default function ProfilePage() {
     setLanguage,
     logout,
     setScreen,
+    currentMatch,
+    findNextMatch,
   } = useStore();
 
   const t = getTranslation(language);
@@ -80,6 +82,10 @@ export default function ProfilePage() {
     await updateUser({ has_partner: checked });
   };
 
+  if (!user) {
+    return <div className="relative h-full w-full bg-[#0D0208]" />;
+  }
+
   return (
     <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-6 overflow-y-auto select-none">
       {/* Top Bar: Back Button, Title, Language, and Edit Profile Button */}
@@ -88,7 +94,7 @@ export default function ProfilePage() {
           type="button"
           onClick={() => setScreen('discovery')}
           aria-label="Back to Hub"
-          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer"
+          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer touch-manipulation active:scale-90"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -447,8 +453,13 @@ export default function ProfilePage() {
           <div className="space-y-3 pt-2">
             <button
               type="button"
-              onClick={() => setScreen('discovery')}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FF4D00] via-[#FF6A00] to-[#E0A96D] text-white font-heading font-extrabold text-base tracking-wide flex items-center justify-center gap-3 shadow-glow-primary hover:opacity-95 active:scale-[0.98] transition-all cursor-pointer"
+              onClick={() => {
+                if (!currentMatch) {
+                  findNextMatch(false);
+                }
+                setScreen('matchCard');
+              }}
+              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#FF4D00] via-[#FF6A00] to-[#E0A96D] text-white font-heading font-extrabold text-base tracking-wide flex items-center justify-center gap-3 shadow-glow-primary hover:opacity-95 active:scale-[0.98] transition-transform duration-75 cursor-pointer touch-manipulation"
             >
               <span>Start Swiping</span>
               <ArrowRight className="w-5 h-5 text-white" />
@@ -457,7 +468,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => setScreen('shareCard')}
-              className="w-full py-2.5 text-center text-xs font-semibold text-gold/80 hover:text-gold transition-colors cursor-pointer"
+              className="w-full py-2.5 text-center text-xs font-semibold text-gold/80 hover:text-gold transition-colors cursor-pointer touch-manipulation active:scale-95"
             >
               {t.shareMyCard}
             </button>
@@ -470,7 +481,7 @@ export default function ProfilePage() {
         <button
           type="button"
           onClick={logout}
-          className="w-full flex items-center justify-center gap-2 text-xs text-text-muted hover:text-red-400 py-3 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 text-xs text-text-muted hover:text-red-400 py-3 transition-colors cursor-pointer touch-manipulation active:scale-95"
         >
           <LogOut className="w-4 h-4" />
           <span>{t.logout}</span>

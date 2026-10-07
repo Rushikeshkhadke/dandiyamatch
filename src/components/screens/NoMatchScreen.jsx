@@ -26,14 +26,19 @@ export default function NoMatchScreen() {
     }
   };
 
+  if (!user) {
+    return <div className="relative h-full w-full bg-[#0D0208]" />;
+  }
+
   return (
     <div className="relative h-full w-full bg-[#0D0208] flex flex-col justify-between px-6 py-6 overflow-y-auto select-none">
       {/* Top back navigation */}
       <header className="relative z-20 flex items-center justify-between shrink-0">
         <button
           type="button"
-          onClick={() => setScreen('profile')}
-          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] flex items-center justify-center text-text-muted hover:text-white"
+          onClick={() => setScreen('discovery')}
+          aria-label="Back to Hub"
+          className="w-10 h-10 rounded-full bg-[#1A0A0A] border border-[#3D151C] hover:border-gold/50 flex items-center justify-center text-text-muted hover:text-white transition-colors cursor-pointer touch-manipulation active:scale-90"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -43,7 +48,7 @@ export default function NoMatchScreen() {
         <button
           type="button"
           onClick={logout}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1A0A0A] border border-[#3D151C] hover:border-gold/40 text-xs font-semibold text-gold transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1A0A0A] border border-[#3D151C] hover:border-gold/40 text-xs font-semibold text-gold transition-colors cursor-pointer touch-manipulation active:scale-95"
         >
           <LogOut className="w-3.5 h-3.5 text-primary" />
           <span>{user?.is_demo ? 'Sign In' : 'Logout'}</span>
@@ -154,7 +159,7 @@ export default function NoMatchScreen() {
                   await updateUser({ city: cityName });
                   resetMatches();
                 }}
-                className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                className={`text-xs px-3 py-1.5 rounded-full border transition-transform duration-75 cursor-pointer touch-manipulation active:scale-95 ${
                   user?.city?.toLowerCase() === cityName.toLowerCase()
                     ? 'bg-gold/20 border-gold text-gold font-semibold'
                     : 'bg-[#1A0A0A] border-[#3D151C] text-text-muted hover:border-gold/40 hover:text-white'
